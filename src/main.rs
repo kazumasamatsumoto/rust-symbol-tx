@@ -32,7 +32,7 @@ fn main() {
     println!("Secret key: {}", hex::encode(keypair.secret.as_bytes()));
     println!("Public key: {}", hex::encode(keypair.public.as_bytes()));
 
-    let dt: DateTime<Local> = Local::now();
+    let dt: DateTime<Local> = Local::now(); // 現在時刻
     let timestamp: i64 = dt.timestamp();
     let deadline_time = ((timestamp + 7200) - 1637848847) * 1000;
 
@@ -63,7 +63,7 @@ fn main() {
         .iter()
         .map(|n| format!("{:02X}", n))
         .collect::<String>();
-    let f: u64 = 300000000;
+    let f: u64 = 300000;
     let fee = f
         .to_le_bytes()
         .iter()
@@ -156,7 +156,7 @@ fn main() {
     println!("{}", json_request);
     println!("{:?}", r);
 
-    let hash_payload = signature.to_string().to_owned()
+    let hash_payload = signature.to_string()
         + &signer
         + &"7fccd304802016bebbcd342a332f91ff1f3bb5e902988b352697be245f48e836"
         + &verifiable_data;
