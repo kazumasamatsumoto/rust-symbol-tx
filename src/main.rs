@@ -25,8 +25,8 @@ fn main() {
     let secret: SecretKey = SecretKey::from_bytes(&sec_bytes[..SECRET_KEY_LENGTH]).unwrap();
     let public: PublicKey = (&secret).into();
     let keypair: Keypair = Keypair {
-        secret: secret,
-        public: public,
+        secret,
+        public,
     };
 
     println!("Secret key: {}", hex::encode(keypair.secret.as_bytes()));
@@ -110,7 +110,7 @@ fn main() {
         .map(|n| format!("{:02X}", n))
         .collect::<String>();
 
-    let verifiable_data = version.to_owned()
+    let verifiable_data = version
         + &network_type
         + &tx_type
         + &fee
@@ -118,7 +118,7 @@ fn main() {
         + &recipient_address
         + &message_size
         + &mosaic_count
-        + &tx_reserved
+        + tx_reserved
         + &mosaic_id
         + &mosaic_amount
         + &message;
@@ -131,7 +131,7 @@ fn main() {
     let msg_bytes: Vec<u8> = FromHex::from_hex(data).unwrap();
     let signature: Signature = keypair.sign(&msg_bytes);
 
-    println!("Signature: {}", signature.to_string());
+    println!("Signature: {}", signature);
 
     let ts: u32 = (verifiable_data.chars().count() / 2 + 108)
         .try_into()
@@ -142,11 +142,11 @@ fn main() {
         .map(|n| format!("{:02X}", n))
         .collect::<String>();
 
-    let tx_buffer = tx_size.to_owned()
-        + &reserved1
+    let tx_buffer = tx_size
+        + reserved1
         + &signature.to_string()
         + &signer
-        + &reserved2
+        + reserved2
         + &verifiable_data;
 
     let json_request = format!(r#"{{"payload":"{}"}}"#, tx_buffer);
@@ -158,7 +158,7 @@ fn main() {
 
     let hash_payload = signature.to_string()
         + &signer
-        + &"7fccd304802016bebbcd342a332f91ff1f3bb5e902988b352697be245f48e836"
+        + "7fccd304802016bebbcd342a332f91ff1f3bb5e902988b352697be245f48e836"
         + &verifiable_data;
     let hash_bytes: Vec<u8> = FromHex::from_hex(hash_payload).unwrap();
     let mut hasher = Sha3_256::new();
